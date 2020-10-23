@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import Home from "../shared/containers/Home";
 
-const App = () => <div>app test</div>;
+const App = () => <Home />;
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.hydrate(<App />, document.getElementById("root"));

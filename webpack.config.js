@@ -1,11 +1,7 @@
-// import path from "path";
-// import webpack from "webpack";
+import path from "path";
+import webpack from "webpack";
 
-// export default {
-const path = require("path");
-const webpack = require("webpack");
-
-module.exports = {
+export default {
   entry: {
     main: [
       "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000",

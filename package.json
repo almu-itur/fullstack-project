@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "full stack project",
   "scripts": {
-    "start": "ts-node-dev src/server/index.ts",
+    "start": "ts-node-dev tools/development.ts",
     "test": "test",
     "build": "webpack --mode production"
   },
