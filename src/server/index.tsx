@@ -7,28 +7,14 @@ import webpackDevMiddleware from "webpack-dev-middleware";
 import webpackHotMiddleware from "webpack-hot-middleware";
 import App from "../shared/containers/App";
 import Home from "../shared/containers/Home";
+import ssr from "./middlewares/ssr";
+import sample from "./middlewares/sample";
 
 type serverArgs = {
   mode: "production" | "development";
   config: Partial<webpack.Configuration>;
   port: number;
 };
-
-const html = (content) => `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TEST</title>
-  </head>
-  <body>
-    <div id="root">
-      ${content}
-    </div>
-    <script src="main.js"></script>
-  </body>
-</html>
-`;
 
 const startApp = ({ mode, config, port }: serverArgs) => {
   const app = express();
@@ -50,13 +36,9 @@ const startApp = ({ mode, config, port }: serverArgs) => {
     app.use(hotMiddleware);
   }
 
-  app.get("/", (req, res) => {
-    const elementAsString = ReactDOMServer.renderToString(<Home />);
-    // res.sendFile(path.join(__dirname + "/index.html"));
-    console.log("====> ", elementAsString);
+  app.use(sample);
 
-    res.send(html(elementAsString));
-  });
+  app.use(ssr);
 
   app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
