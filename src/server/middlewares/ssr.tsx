@@ -3,7 +3,7 @@ import ReactDOMServer from "react-dom/server";
 import { RequestHandler } from "express";
 import Home from "../../shared/containers/Home";
 
-const html = (content) => `<!DOCTYPE html>
+const html = (content, data) => `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -14,15 +14,22 @@ const html = (content) => `<!DOCTYPE html>
     <div id="root">
       ${content}
     </div>
+    <script>window.__DATA__=${JSON.stringify(data).replace(
+      /</g,
+      "\\u003c"
+    )}</script>
     <script src="main.js"></script>
   </body>
 </html>
 `;
 
+const _data = {
+  covid: "We are screwed",
+};
+
 const ssr: RequestHandler = (req, res, next) => {
   const elementAsString = ReactDOMServer.renderToString(<Home />);
-  console.log("res.locals", res.locals);
-  res.send(html(elementAsString));
+  res.send(html(elementAsString, _data));
 };
 
 export default ssr;

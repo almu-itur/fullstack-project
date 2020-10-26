@@ -36,8 +36,6 @@ const startApp = ({ mode, config, port }: serverArgs) => {
     app.use(hotMiddleware);
   }
 
-  app.use(sample);
-
   app.use(ssr);
 
   app.listen(port, () => {
