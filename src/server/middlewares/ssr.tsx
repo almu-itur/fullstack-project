@@ -1,7 +1,11 @@
 import React from "react";
 import ReactDOMServer from "react-dom/server";
+import { renderRoutes } from "react-router-config";
+import { StaticRouter } from "react-router-dom";
 import { RequestHandler } from "express";
 import Home from "../../shared/containers/Home";
+import App from "../../shared/containers/App";
+import routes from "../../shared/route";
 
 const html = (content, data) => `<!DOCTYPE html>
 <html lang="en">
@@ -28,7 +32,13 @@ const _data = {
 };
 
 const ssr: RequestHandler = (req, res, next) => {
-  const elementAsString = ReactDOMServer.renderToString(<Home />);
+  const appTree = (
+    <StaticRouter location={req.path} context={{}}>
+      {renderRoutes(routes)}
+    </StaticRouter>
+  );
+  // const elementAsString = ReactDOMServer.renderToString(<Home />);
+  const elementAsString = ReactDOMServer.renderToString(appTree);
   res.send(html(elementAsString, _data));
 };
 
