@@ -1,3 +1,4 @@
+import { useApolloClient, useQuery, gql } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 declare global {
   interface Window {
@@ -7,6 +8,23 @@ declare global {
 }
 
 const Home = () => {
+  const client = useApolloClient();
+  console.log("client ===", client);
+  const query = gql`
+    query getLaunchesNext {
+      launchNext {
+        id
+        launch_site {
+          site_id
+          site_name
+        }
+        mission_name
+      }
+    }
+  `;
+  const { data } = useQuery(query);
+  console.log("data", data);
+
   const [test, setTest] = useState(false);
   // const [win, setWin] = useState("");
 
@@ -15,10 +33,13 @@ const Home = () => {
   // }, []);
 
   return (
-    <button type="button" onClick={() => setTest(!test)}>
+    // <button type="button" onClick={() => setTest(!test)}>
+    <div>
       {`TEST: ${test}`}
       {/* {win} */}
-    </button>
+      {JSON.stringify(data)}
+    </div>
+    // </button>
   );
 };
 

@@ -14,7 +14,7 @@ export default {
     filename: "[name].js",
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".js"],
+    extensions: [".tsx", ".ts", ".js", ".mjs"],
   },
   mode: "development",
   target: "web",
@@ -50,6 +50,14 @@ export default {
         enforce: "pre",
         test: /\.js$/,
         loader: "source-map-loader",
+      },
+      /**
+       * Mjs
+       */
+      {
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: "javascript/auto",
       },
     ],
   },

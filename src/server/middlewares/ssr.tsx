@@ -1,5 +1,13 @@
 import React from "react";
 import ReactDOMServer from "react-dom/server";
+import fetch from "cross-fetch";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  createHttpLink,
+} from "@apollo/client";
+import { renderToStringWithData } from "@apollo/client/react/ssr";
 import { renderRoutes } from "react-router-config";
 import { StaticRouter } from "react-router-dom";
 import { RequestHandler } from "express";
@@ -30,16 +38,35 @@ const html = (content, data) => `<!DOCTYPE html>
 const _data = {
   covid: "We are screwed",
 };
+const httpLink = createHttpLink({
+  uri: "https://api.spacex.land/graphql/",
+  fetch,
+});
+const client = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache(),
+  ssrMode: true,
+});
 
 const ssr: RequestHandler = (req, res, next) => {
   const appTree = (
-    <StaticRouter location={req.path} context={{}}>
-      {renderRoutes(routes)}
-    </StaticRouter>
+    <ApolloProvider client={client}>
+      <StaticRouter location={req.path} context={{}}>
+        {renderRoutes(routes)}
+      </StaticRouter>
+    </ApolloProvider>
   );
+  renderToStringWithData(appTree).then((content) => {
+    const initialState = client.extract();
+
+    res.status(200);
+    res.send(html(content, initialState));
+    res.end();
+  });
+
   // const elementAsString = ReactDOMServer.renderToString(<Home />);
-  const elementAsString = ReactDOMServer.renderToString(appTree);
-  res.send(html(elementAsString, _data));
+  // const elementAsString = ReactDOMServer.renderToString(appTree);
+  // res.send(html(elementAsString, _data));
 };
 
 export default ssr;

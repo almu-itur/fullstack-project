@@ -9,8 +9,14 @@
   },
   "author": "Almu",
   "license": "ISC",
+  "engines": {
+    "node": "12.14.0"
+  },
   "dependencies": {
+    "@apollo/client": "^3.2.5",
+    "cross-fetch": "^3.0.6",
     "express": "^4.17.1",
+    "graphql": "^15.4.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-router-config": "^5.1.1",
